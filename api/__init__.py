@@ -1,3 +1,5 @@
+from flask_marshmallow import Marshmallow
+
 from config import Config
 from flask import Flask, request
 from flask_restful import Api, Resource, reqparse
@@ -18,3 +20,4 @@ app.config.from_object(Config)
 api = UnicodeApi(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+ma = Marshmallow(app)
