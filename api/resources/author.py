@@ -10,7 +10,7 @@ class AuthorResource(Resource):
             return authors_list, 200
 
         author = AuthorModel.query.get(author_id)
-        if author:
+        if author is None:
             return f"Author id={author_id} not found", 404
 
         return author.to_dict(), 200
@@ -36,5 +36,13 @@ class AuthorResource(Resource):
             db.session.commit()
             return author.to_dict(), 201
         author.name = author_data["name"]
+        db.session.commit()
+        return author.to_dict(), 200
+
+    def delete(self, author_id):
+        author = AuthorModel.query.get(author_id)
+        if author is None:
+            return f"Author with id {author_id} not found", 404
+        db.session.delete(author)
         db.session.commit()
         return author.to_dict(), 200
