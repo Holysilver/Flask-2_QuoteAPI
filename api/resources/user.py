@@ -27,3 +27,20 @@ class UserResource(Resource):
         db.session.commit()
         return user_schema.dump(user), 201
 
+    def put(self, user_id):
+        user = UserModel.query.get(user_id)
+        parser = reqparse.RequestParser()
+        parser.add_argument('username', required=True)
+        parser.add_argument('password', required=False)
+        data = parser.parse_args()
+        if user is None:
+            user = UserModel(**data)
+            db.session.add(user)
+            db.session.commit()
+            return user_schema.dump(user), 201
+        if data["username"]:
+            user.username = data["username"]
+        if data["password"]:
+            user.hash_password(data["password"])
+        db.session.commit()
+        return user_schema.dump(user), 200
