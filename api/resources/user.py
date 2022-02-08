@@ -1,4 +1,4 @@
-from api import Resource, reqparse, db
+from api import Resource, reqparse, db, auth
 from api.models.user import UserModel
 from api.schemas.user import user_schema, users_schema
 
@@ -21,6 +21,7 @@ class UserResource(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('username', required=True)
         parser.add_argument('password', required=True)
+        parser.add_argument('role', required=True)
         data = parser.parse_args()
         user = UserModel(**data)
         db.session.add(user)
@@ -44,3 +45,5 @@ class UserResource(Resource):
             user.hash_password(data["password"])
         db.session.commit()
         return user_schema.dump(user), 200
+
+
