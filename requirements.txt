@@ -8,3 +8,4 @@ gunicorn
 psycopg2-binary
 flask-marshmallow==0.14.0
 marshmallow-sqlalchemy==0.27.0
+passlib~=1.7.4
