@@ -9,9 +9,9 @@ class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), index=True)
     password_hash = db.Column(db.String(128))
-    role = db.Column(db.String(32))
+    role = db.Column(db.String(32), server_default="simple_user")
 
-    def __init__(self, username, password, role):
+    def __init__(self, username, password, role="simple_user"):
         self.username = username
         self.hash_password(password)
         self.role = role
@@ -27,7 +27,7 @@ class UserModel(db.Model):
         return s.dumps({'id': self.id})
 
     def get_roles(self):
-        return self.role
+        return [self.role]
 
     @staticmethod
     def verify_auth_token(token):
@@ -40,8 +40,3 @@ class UserModel(db.Model):
             return None  # invalid token
         user = UserModel.query.get(data['id'])
         return user
-
-
-@auth.get_user_roles    # НЕ РАБОТАЕТ!!!!! НЕ ПОНИМАЮ КУДА ЕГО ДОБАВЛЯТЬ!
-def get_user_roles(user):
-    return user.get_roles()
